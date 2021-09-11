@@ -1,0 +1,19 @@
+version: '2.4'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - data_pg:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - 15432:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 18080:8080
+volumes:
+  data_pg:
