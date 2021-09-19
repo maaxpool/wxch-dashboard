@@ -1,9 +1,10 @@
 package config
 
 type Config struct {
-	Debug *DebugConfig
-	DB    *DBConfig
-	RPC   *RPCConfig
+	Debug   *DebugConfig
+	DB      *DBConfig
+	RPC     *RPCConfig
+	EthNode *EthNodeConfig
 }
 
 type DebugConfig struct {
@@ -25,6 +26,13 @@ type DBConfig struct {
 }
 
 type RPCConfig struct {
-	Listen string
-	Port   uint16
+	Listen     string
+	Port       uint16
+	AdminToken string
+}
+
+type EthNodeConfig struct {
+	ChainId                   int64
+	InfuraHost                string
+	WxchBridgeContractAddress string
 }

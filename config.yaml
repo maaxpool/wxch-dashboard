@@ -1,3 +1,21 @@
 Debug:
   Verbose: true
   DisableCron: true
+  DisableSentry: true
+  SentryDSN:
+DB:
+  Host: 127.0.0.1
+  User: postgres
+  Password: password
+  DbName: wxch-dashboard
+  Port: 15432
+RPC:
+  Listen: 0.0.0.0
+  Port: 4700
+  AdminToken: m52Rzg776izQ8pKqr
+EthNode:
+  # this ChainId below only for Ropsten testnet, mainnet is 1
+  ChainId: 3
+  # this InfuraHost below only for Ropsten testnet
+  InfuraHost: https://ropsten.infura.io/v3/37fafbfcc1fc47f29a91eb3a72230f16
+  WxchBridgeContractAddress: 0xbaC8fa980A71Ff221D361905999654319d46202D

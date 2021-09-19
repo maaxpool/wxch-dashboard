@@ -50,5 +50,7 @@ func initDB() {
 
 	migrate := db
 
-	mustSuccess(migrate.AutoMigrate(&User{}))
+	mustSuccess(migrate.AutoMigrate(&SysConfig{}))
+	mustSuccess(migrate.AutoMigrate(&Transaction{}))
+	mustSuccess(migrate.AutoMigrate(&Partner{}))
 }

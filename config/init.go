@@ -7,17 +7,29 @@ import (
 
 var config Config = Config{
 	Debug: &DebugConfig{
-		Verbose:     false,
-		DisableCron: false,
+		Verbose:       false,
+		DisableCron:   true,
+		DisableSentry: true,
+		SentryDSN:     "",
 	},
 	DB: &DBConfig{
-		Port:     "9920",
+		Host:     "127.0.0.1",
+		User:     "postgres",
+		Password: "password",
+		DbName:   "wxch-dashboard",
+		Port:     "15432",
 		SSLMode:  "disable",
 		TimeZone: "UTC",
 	},
 	RPC: &RPCConfig{
 		Listen: "127.0.0.1",
-		Port:   4600,
+		Port:   4700,
+		AdminToken: "",
+	},
+	EthNode: &EthNodeConfig{
+		ChainId:                   3,
+		InfuraHost:                "",
+		WxchBridgeContractAddress: "0xbaC8fa980A71Ff221D361905999654319d46202D",
 	},
 }
 
