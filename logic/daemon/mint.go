@@ -30,9 +30,10 @@ func mintConfirmedHandler(transLog types.Log) (err error) {
 	fmt.Printf("Mint Amount: %d\n", mintConfirmedEvent.Amount.Int64())
 
 	// create new transaction log
+	amount := float64(mintAmount.Uint64())
 	newTransactionLog := &db.Transaction{
 		Type:             "mint",
-		Amount:           float64(mintAmount.Uint64()),
+		Amount:           amount,
 		FeeAmount:        0,
 		SenderAddress:    mintConfirmedEvent.DepositAddress,
 		ReceiverAddress:  mintConfirmedEvent.Requester.Hex(),
@@ -47,6 +48,9 @@ func mintConfirmedHandler(transLog types.Log) (err error) {
 	if partner.ID > 0 {
 		newTransactionLog.PartnerId = partner.ID
 		newTransactionLog.PartnerName = partner.Name
+
+		// update partner balance
+		_ = db.UpdateBalanceById(partner.ID, partner.Balance+amount)
 	} else {
 		newTransactionLog.PartnerId = 0
 		newTransactionLog.PartnerName = "Unknown Partner"

@@ -1,6 +1,8 @@
 package db
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type Partner struct {
 	gorm.Model
@@ -25,9 +27,20 @@ func GetPartnerCountByStatusRole(status string, role string) uint {
 	return uint(count)
 }
 
+func GetPartnerTotalBalance() float64 {
+	var total float64
+	db.Table("partners").Where("status = ? AND role = ? AND deleted_at IS NULL", "available", "broker").Pluck("COALESCE(SUM(balance), 0) as total", &total)
+	return total
+}
+
 func FindPaginationPartnersByStatusRole(status string, role string, offset int, size int) (partners []Partner, err error) {
 	err = db.Where("status = ? AND role = ?", status, role).Limit(size).Offset(offset).Order("id desc").Find(&partners).Error
 	return
+}
+
+func UpdateBalanceById(partnerId uint, balance float64) error {
+	err := db.Where("id = ?", partnerId).Update("balance", balance).Error
+	return err
 }
 
 func SavePartner(partner *Partner) (err error) {

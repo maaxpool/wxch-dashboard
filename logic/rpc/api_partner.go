@@ -54,6 +54,52 @@ func getPartnerListHandler(typ interface{}, r *http.Request) (resp interface{}, 
 	}, nil
 }
 
+func getPartnerAssetsListHandler(typ interface{}, r *http.Request) (resp interface{}, err error) {
+	req := r.URL.Query()
+
+	// stat total transaction amount
+	total := db.GetPartnerCountByStatusRole("available", "broker")
+	if total == 0 {
+		return &getPartnerListResponse{
+			Total:    0,
+			Partners: []partnerListItem{},
+		}, nil
+	}
+
+	// stat total balance
+	totalBalance := db.GetPartnerTotalBalance()
+
+	// calc pagination
+	page, err := strconv.Atoi(req.Get("page"))
+	if err != nil {
+		return nil, err
+	}
+	size, err := strconv.Atoi(req.Get("size"))
+	if err != nil {
+		return nil, err
+	}
+	offset := (page - 1) * size
+
+	// get partner list
+	partners, err := db.FindPaginationPartnersByStatusRole("available", "broker", offset, size)
+	if err != nil {
+		return nil, err
+	}
+
+	partnerItem := make([]partnerAssetsListItem, 0)
+	for _, partner := range partners {
+		partnerItem = append(partnerItem, partnerAssetsListItem{
+			ChiaCustodianDepositoryAddress: partner.ChiaCustodianDepositoryAddress,
+			Balance:                        partner.Balance,
+		})
+	}
+	return &getPartnerAssetsListResponse{
+		Total:        total,
+		TotalBalance: totalBalance,
+		Partners:     partnerItem,
+	}, nil
+}
+
 func createPartnerHandler(obj interface{}, r *http.Request) (resp interface{}, err error) {
 	req := obj.(*createPartnerRequest)
 

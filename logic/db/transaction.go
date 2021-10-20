@@ -96,6 +96,18 @@ func GetTotalTransactionAmountByTypeUserId(transactionType string, userId uint) 
 	return result.Total, err
 }
 
+func GetTotalMintAmount() float64 {
+	var total float64
+	db.Table("transactions").Where("status = ? AND deleted_at IS NULL", "mint_completed").Pluck("COALESCE(SUM(amount), 0) as total", &total)
+	return total
+}
+
+func GetTotalBurnAmount() float64 {
+	var total float64
+	db.Table("transactions").Where("status = ? AND deleted_at IS NULL", "burn_completed").Pluck("COALESCE(SUM(amount), 0) as total", &total)
+	return total
+}
+
 func SaveTransaction(transaction *Transaction) (err error) {
 	return db.Save(transaction).Error
 }

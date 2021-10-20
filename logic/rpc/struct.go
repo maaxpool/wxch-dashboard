@@ -22,6 +22,11 @@ type getPartnerListRequest struct {
 	Size uint `schema:"size" validate:"required"`
 }
 
+type getPartnerAssetsListRequest struct {
+	Page uint `schema:"page" validate:"required"`
+	Size uint `schema:"size" validate:"required"`
+}
+
 // ============ Response ===============
 
 type getTransactionListResponse struct {
@@ -53,4 +58,20 @@ type partnerListItem struct {
 	ChiaCustodianDepositoryAddress string `json:"chia_custodian_depository_address"`
 	ChiaBrokerDepositAddress       string `json:"chia_broker_deposit_address"`
 	BridgeUrl                      string `json:"bridge_url"`
+}
+
+type getPartnerAssetsListResponse struct {
+	Total        uint                    `json:"total"`
+	TotalBalance float64                 `json:"total_balance"`
+	Partners     []partnerAssetsListItem `json:"partners"`
+}
+
+type partnerAssetsListItem struct {
+	ChiaCustodianDepositoryAddress string  `json:"chia_custodian_depository_address"`
+	Balance                        float64 `json:"balance"`
+}
+
+type getGlobalStatResponse struct {
+	NetworkAmount float64 `json:"network_amount"`
+	CustodyAmount float64 `json:"custody_amount"`
 }

@@ -30,9 +30,10 @@ func burnConfirmedHandler(transLog types.Log) (err error) {
 	fmt.Printf("Burn Amount: %d\n", burnConfirmedEvent.Amount.Int64())
 
 	// create new transaction log
+	amount := float64(burnAmount.Uint64())
 	newTransactionLog := &db.Transaction{
 		Type:             "burn",
-		Amount:           float64(burnAmount.Uint64()),
+		Amount:           amount,
 		FeeAmount:        0,
 		SenderAddress:    burnConfirmedEvent.Requester.Hex(),
 		ReceiverAddress:  burnConfirmedEvent.DepositAddress,
@@ -47,6 +48,9 @@ func burnConfirmedHandler(transLog types.Log) (err error) {
 	if partner.ID > 0 {
 		newTransactionLog.PartnerId = partner.ID
 		newTransactionLog.PartnerName = partner.Name
+
+		// update partner balance
+		_ = db.UpdateBalanceById(partner.ID, partner.Balance-amount)
 	} else {
 		newTransactionLog.PartnerId = 0
 		newTransactionLog.PartnerName = "Unknown Partner"
